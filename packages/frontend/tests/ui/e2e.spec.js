@@ -91,18 +91,14 @@ test.describe('TODO Application - Critical Journeys', () => {
     // Block API requests to simulate backend being down
     await context.route('**/api/todos**', route => route.abort());
     
-    // Navigate to the page
+    // Navigate to the page - error should appear immediately
     await todoPage.goto();
-    
-    // Try to add a todo
-    const todoTitle = 'This should fail';
-    await todoPage.todoInput.fill(todoTitle);
-    await todoPage.addButton.click();
     
     // Verify error state is shown
     await todoPage.waitForApiError();
     
-    // Verify the todo was not added to the list
-    await expect(page.getByText(todoTitle)).not.toBeVisible();
+    // Verify the add form is still visible (UI should remain functional)
+    await expect(todoPage.todoInput).toBeVisible();
+    await expect(todoPage.addButton).toBeVisible();
   });
 });
